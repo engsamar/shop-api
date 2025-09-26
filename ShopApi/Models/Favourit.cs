@@ -1,0 +1,13 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ShopApi.Models
+{
+    [PrimaryKey(nameof(ApplicationUserId), nameof(ProductId))]
+    public class Favourit
+    {
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
+    }
+}

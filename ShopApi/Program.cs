@@ -1,0 +1,97 @@
+
+using ShopApi.Utility.DBInitializer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Stripe;
+
+namespace ShopApi
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+            var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                                  });
+            });
+            
+            builder.Services.AddControllers();
+
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseMySql(
+                    "server=localhost;database=shop_api;user=root;password=;",
+                    new MySqlServerVersion(new Version(8, 0, 21))
+                ));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(option =>
+            {
+                option.Password.RequiredLength = 6;
+                option.Password.RequireNonAlphanumeric = false;
+                option.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Account/Login";
+                options.AccessDeniedPath = "/Customer/Home/NotFoundPage";
+            });
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+            builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
+            builder.Services.AddScoped<IRepository<Publisher>, Repository<Publisher>>();
+
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IRepository<UserOTP>, Repository<UserOTP>>();
+            builder.Services.AddScoped<IDBInitializer, DBInitializer>();
+            builder.Services.AddScoped<IRepository<Cart>, Repository<Cart>>();
+            builder.Services.AddScoped<IRepository<Promotion>, Repository<Promotion>>();
+            // builder.Services.AddScoped<IRepository<Order>, Repository<Order>>();
+            builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            
+
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+            var app = builder.Build();
+
+            app.UseStaticFiles();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseCors(MyAllowSpecificOrigins);
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
+
+            var scope = app.Services.CreateScope();
+            var service = scope.ServiceProvider.GetService<IDBInitializer>();
+            service.Initialize();
+
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
+}
