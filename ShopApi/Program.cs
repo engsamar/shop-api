@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
-
+using Order = ShopApi.Models.Order;
 namespace ShopApi
 {
     public class Program
@@ -59,10 +59,9 @@ namespace ShopApi
             builder.Services.AddScoped<IDBInitializer, DBInitializer>();
             builder.Services.AddScoped<IRepository<Cart>, Repository<Cart>>();
             builder.Services.AddScoped<IRepository<Promotion>, Repository<Promotion>>();
-            // builder.Services.AddScoped<IRepository<Order>, Repository<Order>>();
+            builder.Services.AddScoped<IRepository<Order>, Repository<Order>>();
             builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             
-
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
