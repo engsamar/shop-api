@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Order = ShopApi.Models.Order;
+using Review = ShopApi.Models.Review;
+
 namespace ShopApi
 {
     public class Program
@@ -50,10 +52,9 @@ namespace ShopApi
             });
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
-
             builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
             builder.Services.AddScoped<IRepository<Publisher>, Repository<Publisher>>();
-
+            builder.Services.AddScoped<IRepository<Author>, Repository<Author>>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IRepository<UserOTP>, Repository<UserOTP>>();
             builder.Services.AddScoped<IDBInitializer, DBInitializer>();
@@ -61,6 +62,8 @@ namespace ShopApi
             builder.Services.AddScoped<IRepository<Promotion>, Repository<Promotion>>();
             builder.Services.AddScoped<IRepository<Order>, Repository<Order>>();
             builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            builder.Services.AddScoped<IRepository<Favourit>, Repository<Favourit>>();
+            builder.Services.AddScoped<IRepository<Review>, Repository<Review>>();
             
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
