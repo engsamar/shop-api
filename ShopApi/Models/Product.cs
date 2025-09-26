@@ -23,6 +23,8 @@
         public Category? Category { get; set; }
         public Publisher? Publisher { get; set; }
         public Author? Author { get; set; }
+        
+        public int Stock { get; set; } = 0;
 
     }
 }

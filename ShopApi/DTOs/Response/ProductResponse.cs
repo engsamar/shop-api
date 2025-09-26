@@ -13,5 +13,9 @@
         public string? CategoryName { get; set; }
         public string? CategoryDescription { get; set; }
         public string? CategoryStatus { get; set; }
+        
+        public string? PublisherName { get; set; }
+        public string? AuthorName { get; set; }
+
     }
 }

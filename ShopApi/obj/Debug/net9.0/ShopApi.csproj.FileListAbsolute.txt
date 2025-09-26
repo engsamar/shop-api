@@ -143,3 +143,4 @@
 /Users/zamar/RiderProjects/ShopApi/ShopApi/obj/Debug/net9.0/ShopApi.pdb
 /Users/zamar/RiderProjects/ShopApi/ShopApi/obj/Debug/net9.0/ShopApi.genruntimeconfig.cache
 /Users/zamar/RiderProjects/ShopApi/ShopApi/obj/Debug/net9.0/ref/ShopApi.dll
+/Users/zamar/RiderProjects/ShopApi/ShopApi/obj/Debug/net9.0/ShopApi.sourcelink.json
